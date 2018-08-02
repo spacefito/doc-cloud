@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>Drivers</title>
+  <para>Cinder exposes an API to users to interact with different storage backend
+            solutions. The following are standards across all drivers for Cinder services
+            to properly interact with a driver.</para>
+  <section>
+    <title>Basic attributes</title>
+    <para>There are some basic attributes that all drivers classes should have:</para>
+    <itemizedlist>
+      <listitem>
+        <para>VERSION: Driver version in string format.  No naming convention is imposed,
+                        although semantic versioning is recommended.</para>
+      </listitem>
+      <listitem>
+        <para>CI_WIKI_NAME: Must be the exact name of the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wiki.openstack.org/wiki/ThirdPartySystems">ThirdPartySystems wiki page</link>. This is used by our
+                        tooling system to associate jobs to drivers and track their CI reporting
+                        status correctly.</para>
+      </listitem>
+    </itemizedlist>
+    <para>The tooling system will also use the name and docstring of the driver class.</para>
+  </section>
+  <section>
+    <title>Minimum Features</title>
+    <para>Minimum features are enforced to avoid having a grid of what features are
+                supported by which drivers and which releases. Cinder Core requires that all
+                drivers implement the following minimum features.</para>
+  </section>
+  <section xml:id="core-functionality">
+    <title>Core Functionality</title>
+    <itemizedlist>
+      <listitem>
+        <para>Volume Create/Delete</para>
+      </listitem>
+      <listitem>
+        <para>Volume Attach/Detach</para>
+      </listitem>
+      <listitem>
+        <para>Snapshot Create/Delete</para>
+      </listitem>
+      <listitem>
+        <para>Create Volume from Snapshot</para>
+      </listitem>
+      <listitem>
+        <para>Get Volume Stats</para>
+      </listitem>
+      <listitem>
+        <para>Copy Image to Volume</para>
+      </listitem>
+      <listitem>
+        <para>Copy Volume to Image</para>
+      </listitem>
+      <listitem>
+        <para>Clone Volume</para>
+      </listitem>
+      <listitem>
+        <para>Extend Volume</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section>
+    <title>Volume Stats</title>
+    <para>Volume stats are used by the different schedulers for the drivers to provide
+                a report on their current state of the backend. The following should be
+                provided by a driver.</para>
+    <itemizedlist>
+      <listitem>
+        <para>driver_version</para>
+      </listitem>
+      <listitem>
+        <para>free_capacity_gb</para>
+      </listitem>
+      <listitem>
+        <para>storage_protocol</para>
+      </listitem>
+      <listitem>
+        <para>total_capacity_gb</para>
+      </listitem>
+      <listitem>
+        <para>vendor_name</para>
+      </listitem>
+      <listitem>
+        <para>volume_backend_name</para>
+      </listitem>
+    </itemizedlist>
+    <para><emphasis role="bold">NOTE:</emphasis> If the driver is unable to provide a value for free_capacity_gb or
+                total_capacity_gb, keywords can be provided instead. Please use ‘unknown’ if
+                the backend cannot report the value or ‘infinite’ if the backend has no upper
+                limit. But, it is recommended to report real values as the Cinder scheduler
+                assigns lowest weight to any storage backend reporting ‘unknown’ or ‘infinite’.</para>
+  </section>
+  <section>
+    <title>Feature Enforcement</title>
+    <para>All concrete driver implementations should use the
+                <literal>cinder.interface.volumedriver</literal> decorator on the driver class:</para>
+    <screen>@interface.volumedriver
+class LVMVolumeDriver(driver.VolumeDriver):</screen>
+    <para>This will register the driver and allow automated compliance tests to run
+                against and verify the compliance of the driver against the required interface
+                to support the <xref linkend="core-functionality"/> listed above.</para>
+    <para>Running <literal>tox -e compliance</literal> will verify all registered drivers comply to
+                this interface. This can be used during development to perform self checks
+                along the way. Any missing method calls will be identified by the compliance
+                tests.</para>
+    <para>The details for the required volume driver interfaces can be found in the
+                <literal>cinder/interface/volume_*_driver.py</literal> source.</para>
+  </section>
+  <section>
+    <title>Driver Development Documentations</title>
+    <para>The LVM driver is our reference for all new driver implementations. The
+                information below can provide additional documentation for the methods that
+                volume drivers need to implement.</para>
+    <section>
+      <title>Base Driver Interface</title>
+      <para>The methods documented below are the minimum required interface for a volume
+                    driver to support. All methods from this interface must be implemented
+                    in order to be an official Cinder volume driver.</para>
+      <para>Core backend volume driver interface.</para>
+      <para>All backend drivers should support this interface as a bare minimum.</para>
+    </section>
+    <section>
+      <title>Snapshot Interface</title>
+      <para>Another required interface for a volume driver to be fully compatible is the
+                    ability to create and manage snapshots. Due to legacy constraints, this
+                    interface is not included in the base driver interface above.</para>
+      <para>Work is being done to address those legacy issues. Once that is complete, this
+                    interface will be merged with the base driver interface.</para>
+      <para>Snapshot capable volume driver interface.</para>
+    </section>
+    <section>
+      <title>Manage/Unmanage Support</title>
+      <para>An optional feature a volume backend can support is the ability to manage
+                    existing volumes or unmanage volumes - keep the volume on the storage backend
+                    but no longer manage it through Cinder.</para>
+      <para>To support this functionality, volume drivers must implement these methods:</para>
+      <para>Manage/unmanage existing volume driver interface.</para>
+    </section>
+    <section>
+      <title>Manage/Unmanage Snapshot Support</title>
+      <para>In addition to the ability to manage and unmanage volumes, Cinder backend
+                    drivers may also support managing and unmanaging volume snapshots. These
+                    additional methods must be implemented to support these operations.</para>
+      <para>Manage/unmanage existing volume snapshots driver interface.</para>
+    </section>
+    <section>
+      <title>Volume Consistency Groups</title>
+      <para>Some storage backends support the ability to group volumes and create write
+                    consistent snapshots across the group. In order to support these operations,
+                    the following interface must be implemented by the driver.</para>
+      <para>Consistency group volume driver interface.</para>
+    </section>
+    <section>
+      <title>Generic Volume Groups</title>
+      <para>The generic volume groups feature provides the ability to manage a group of
+                    volumes together. Because this feature is implemented at the manager level,
+                    every driver gets this feature by default. If a driver wants to override
+                    the default behavior to support additional functionalities such as consistent
+                    group snapshot, the following interface must be implemented by the driver.
+                    Once every driver supporting volume consistency groups has added the
+                    consistent group snapshot capability to generic volume groups, we no longer
+                    need the volume consistency groups interface listed above.</para>
+      <para>Generic volume group volume driver interface.</para>
+    </section>
+  </section>
+</section>

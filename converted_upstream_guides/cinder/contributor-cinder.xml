@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>Common and Misc Libraries</title>
+  <para>Libraries common throughout Cinder or just ones that haven’t been categorized
+            very well yet.</para>
+  <section>
+    <title>The <xref linkend="module-cinder.context"/> Module</title>
+    <para>RequestContext: context for requests that persist through all of cinder.</para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.exception"/> Module</title>
+    <para>Cinder base exception handling.</para>
+    <para>Includes decorator for re-raising Cinder-type exceptions.</para>
+    <para>SHOULD include dedicated exception logging.</para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.common.config"/> Module</title>
+    <para>Command-line flag library.</para>
+    <para>Emulates gflags by wrapping cfg.ConfigOpts.</para>
+    <para>The idea is to move fully to cfg eventually, and this wrapper is a
+                stepping stone.</para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.rpc"/> Module</title>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.test"/> Module</title>
+    <para>Base classes for our unit tests.</para>
+    <para>Allows overriding of CONF for use of fakes, and some black magic for
+                inline callbacks.</para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.utils"/> Module</title>
+    <para>Utilities and helper functions.</para>
+  </section>
+  <section>
+    <title>The <literal>cinder.wsgi</literal> Module</title>
+  </section>
+  <section>
+    <title>Tests</title>
+    <section>
+      <title>The <literal>conf_fixture</literal> Module</title>
+    </section>
+    <section>
+      <title>The <literal>test_rpc</literal> Module</title>
+    </section>
+  </section>
+</section>

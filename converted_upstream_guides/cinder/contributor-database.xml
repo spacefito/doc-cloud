@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>The Database Layer</title>
+  <section>
+    <title>The <xref linkend="module-cinder.db.api"/> Module</title>
+    <para>Defines interface for DB access.</para>
+    <para>Functions in this module are imported into the cinder.db namespace. Call these
+                functions from cinder.db namespace, not the cinder.db.api namespace.</para>
+    <para>All functions in this module return objects that implement a dictionary-like
+                interface. Currently, many of these objects are sqlalchemy objects that
+                implement a dictionary interface. However, a future goal is to have all of
+                these objects be simple dictionaries.</para>
+    <para>
+      <emphasis role="bold">Related Flags</emphasis>
+    </para>
+  </section>
+  <section>
+    <title>The Sqlalchemy Driver</title>
+    <section>
+      <title>The <xref linkend="module-cinder.db.sqlalchemy.api"/> Module</title>
+      <para>Implementation of SQLAlchemy backend.</para>
+    </section>
+    <section>
+      <title>The <xref linkend="module-cinder.db.sqlalchemy.models"/> Module</title>
+      <para>SQLAlchemy models for cinder data.</para>
+    </section>
+  </section>
+  <section>
+    <title>Tests</title>
+    <para>Tests are lacking for the db api layer and for the sqlalchemy driver.
+                Failures in the drivers would be detected in other test cases, though.</para>
+  </section>
+</section>

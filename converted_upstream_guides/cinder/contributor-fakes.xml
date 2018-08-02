@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>Fake Drivers</title>
+  <para>TODO: document general info about fakes</para>
+  <para>When the real thing isn’t available and you have some development to do these
+            fake implementations of various drivers let you get on with your day.</para>
+  <section>
+    <title>The <literal>cinder.tests.unit.test_service.FakeManager</literal> Class</title>
+  </section>
+  <section>
+    <title>The <literal>cinder.tests.unit.api.fakes</literal> Module</title>
+  </section>
+</section>

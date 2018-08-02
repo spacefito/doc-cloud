@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet
+ href="urn:x-daps:xslt:profiling:docbook51-profile.xsl"
+ type="text/xml"
+ title="Profiling step"?>
+<!DOCTYPE book
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+  %entities;
+]>
+
+<book xml:lang="en" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude" version="5.1">
+ <title>&ostack; Administrator Guide</title>
+ <info>
+  <productname>&productname;</productname>
+  <?dbsuse-bugtracker
+   url="https://bugzilla.suse.com/enter_bug.cgi"
+   product="SUSE OpenStack Cloud 8"
+   component="Documentation"
+   assignee="dpopov@suse.com"
+  ?>
+ </info>
+<chapter xml:id="cha.cinder.admin">
+<title>o_blockstore Administrator Guide</title>
+ <xi:include href="admin-blockstorage-api-throughput.xml"/>
+ <xi:include href="admin-blockstorage-manage-volumes.xml"/>
+ <!-- <xi:include href="admin-blockstorage-troubleshoot.xml"/> -->
+</chapter>
+</book>

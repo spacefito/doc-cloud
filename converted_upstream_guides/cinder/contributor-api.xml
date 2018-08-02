@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>API Endpoint</title>
+  <para>Cinder has a system for managing multiple APIs on different subdomains.
+            Currently there is support for the OpenStack API.</para>
+  <section>
+    <title>Common Components</title>
+    <section>
+      <title>The <literal>cinder.api</literal> Module</title>
+    </section>
+  </section>
+  <section>
+    <title>Tests</title>
+    <section>
+      <title>The <literal>api</literal> Module</title>
+    </section>
+    <section>
+      <title>The <literal>api.fakes</literal> Module</title>
+    </section>
+    <section>
+      <title>The <literal>api.openstack</literal> Module</title>
+    </section>
+    <section>
+      <title>The <literal>api.openstack.test_wsgi</literal> Module</title>
+    </section>
+    <section>
+      <title>The <literal>test_auth</literal> Module</title>
+    </section>
+    <section>
+      <title>The <literal>test_faults</literal> Module</title>
+    </section>
+  </section>
+</section>

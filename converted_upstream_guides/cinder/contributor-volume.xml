@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>Storage Volumes, Disks</title>
+  <note>
+    <para>TODO(todd or vish): rework after iSCSI merge (see ‘Old Docs’) (todd or vish)</para>
+  </note>
+  <section>
+    <title>The <xref linkend="module-cinder.volume.manager"/> Module</title>
+    <para>Volume manager manages creating, attaching, detaching, and persistent storage.</para>
+    <para>Persistent storage volumes keep their state independent of instances.  You can
+                attach to an instance, terminate the instance, spawn a new instance (even
+                one from a different image) and re-attach the volume with the same data
+                intact.</para>
+    <para>
+      <emphasis role="bold">Related Flags</emphasis>
+    </para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.volume.driver"/> Module</title>
+    <para>Drivers for volumes.</para>
+  </section>
+  <section>
+    <title>Tests</title>
+    <section>
+      <title>The <literal>cinder.tests.unit.volume</literal> Module</title>
+    </section>
+  </section>
+  <section>
+    <title>Old Docs</title>
+    <para>Cinder uses iSCSI to export storage volumes from multiple storage nodes. These iSCSI exports are attached (using libvirt) directly to running instances.</para>
+    <para>Cinder volumes are exported over the primary system VLAN (usually VLAN 1), and not over individual VLANs.</para>
+    <para>The underlying volumes by default are LVM logical volumes, created on demand within a single large volume group.</para>
+  </section>
+</section>

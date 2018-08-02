@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section xmlns="http://docbook.org/ns/docbook">
+  <title>Scheduler</title>
+  <section>
+    <title>The <xref linkend="module-cinder.scheduler.manager"/> Module</title>
+    <para>Scheduler Service</para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.scheduler.driver"/> Module</title>
+    <para>Scheduler base class that all Schedulers should inherit from</para>
+  </section>
+  <section>
+    <title>The <xref linkend="module-cinder.scheduler.filter_scheduler"/> Driver</title>
+    <para>The FilterScheduler is for creating volumes.</para>
+    <para>You can customize this scheduler by specifying your own volume Filters and
+                Weighing Functions.</para>
+  </section>
+  <section>
+    <title>Tests</title>
+    <section>
+      <title>The <literal>cinder.tests.unit.scheduler</literal> Module</title>
+    </section>
+  </section>
+</section>
