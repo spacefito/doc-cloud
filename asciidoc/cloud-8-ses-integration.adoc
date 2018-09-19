@@ -1,0 +1,1 @@
+Integrating SUSE OpenStack Cloud 8 with SUSE Enterprise Storage 5.5
