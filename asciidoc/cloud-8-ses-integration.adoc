@@ -1,1 +1,30 @@
 Integrating SUSE OpenStack Cloud 8 with SUSE Enterprise Storage 5.5
+===================================================================
+
+== Options for Creating the  SES 5.5 yaml input file
+
+
+* Convert cloud8 v1 manual ses_config.yml and associated keyring files into the v2 SES 5.5 single yaml file format.
+----
+   Use playbook. 
+   description:
+     - This module converts a cloud8 v1 manual ses_config.yml and associated
+     keyring files into the v2 SES 5.5 single yaml file format.
+options:
+  conf_dir:
+    description:
+      - The SES config directory that contains the v1 ses_config file and
+        the keyrings
+    required: true
+    default: null
+  conf_file:
+    description:
+      - The SES config file name that lives in conf_dir
+    required: true
+    default: null
+----
+
+* Obtain v2 SES 5.5 single yaml from SES CLI.
+----
+section with cli example
+----
