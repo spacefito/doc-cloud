@@ -98,13 +98,19 @@
     <para>
      You can remove the Compute host from the availability zone it was a part
      of with this command:
-    </para>
-<screen>nova aggregate-remove-host &lt;availability zone&gt; &lt;nova hostname&gt;</screen>
+ </para>
+<screen>nova aggregate-remove-host &lt;aggregate&gt; &lt;nova hostname&gt;</screen>
     <para>
-     So for the same example as the previous step, the
+     In order to find out the aggregate a hosts belongs to use the commands:
+<screen> nova aggregate-list</screen>
+     in combination with: 
+<screen> nova aggregate-show &ltaggregate&gt </screen>
+     For the same example in the previous step, the
      <literal>ardana-cp1-comp0002-mgmt</literal> host was in the
-     <literal>AZ2</literal> availability zone so I would use this command to
-     remove it:
+     <literal>AZ2</literal> aggregate, which is named the same as the availability zone.
+     It is not necessary that aggregates be named the same as the availability zone, thus the need
+     to use the commands listed above to find out the aggregate the host belongs to.
+     In this example they are named the same so the command to remove the host from teh aggregate is:
     </para>
 <screen>$ nova aggregate-remove-host AZ2 ardana-cp1-comp0002-mgmt
 Host ardana-cp1-comp0002-mgmt has been successfully removed from aggregate 4
