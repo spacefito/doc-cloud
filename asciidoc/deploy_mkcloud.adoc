@@ -34,7 +34,7 @@ On leap 42.3 make sure 'screen' is installed:
 
 
 You can use the following template as a script to launch everything at once.
-DO NOTE: the $cloud variable (seen below) needs to be no more than 9 characters
+NOTE: the $cloud variable (seen below) needs to be no more than 9 characters
 
  ardana@crowbar:~> more mkcloud-deploy.sh
  #!/bin/bash
