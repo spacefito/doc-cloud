@@ -1,0 +1,131 @@
+Deploying mkcloud from provo data center.
+=========================================
+
+This instructions are based on  https://github.com/SUSE-Cloud/automation/blob/master/docs/mkcloud.md
+
+Make sure you machine can reach the following hosts:
+
+
+ ping clouddata.cloud.suse.de
+ ping build.suse.de
+
+ ardana@crowbar:~> ping clouddata.cloud.suse.de
+ PING clouddata.cloud.suse.de (10.162.191.194) 56(84) bytes of data.
+ 64 bytes from 10.162.191.194: icmp_seq=1 ttl=52 time=161 ms
+ ^C
+ --- clouddata.cloud.suse.de ping statistics ---
+ 2 packets transmitted, 1 received, 50% packet loss, time 1001ms
+ rtt min/avg/max/mdev = 161.893/161.893/161.893/0.000 ms
+ ardana@crowbar:~> ping build.suse.de
+ PING build.suse.de (149.44.176.6) 56(84) bytes of data.
+ 64 bytes from notify.nue.suse.com (149.44.176.6): icmp_seq=1 ttl=53 time=161 ms
+ 64 bytes from api.nue.suse.com (149.44.176.6): icmp_seq=2 ttl=53 time=160 ms
+ ^C
+ --- build.suse.de ping statistics ---
+ 3 packets transmitted, 2 received, 33% packet loss, time 2002ms
+ rtt min/avg/max/mdev = 160.794/161.082/161.370/0.288 ms
+ ardana@crowbar:~>
+
+
+
+On leap 42.3 make sure 'screen' is installed:
+
+ sudo zyppe install screen
+
+
+You can use the following template as a script to launch everything at once.
+DO NOTE: the $cloud variable (seen below) needs to be no more than 9 characters
+
+ ardana@crowbar:~> more mkcloud-deploy.sh
+ #!/bin/bash
+ #
+ # tell mkcloud to cache all repositories it will pass into the VMs locally
+ # on the host that mkcloud is being invoked on during "prepare" step.
+ #
+ # This allows running mkcloud without VPN being used.
+ export cache_clouddata=1
+ #
+ # path to the locally available repositories. By default, cache_dir is set
+ # to "/var/cache/mkcloud". If you want to change it to a different location,
+ # you should be making sure that the partition have enough free space to cache
+ # all the necessary repos.
+ #export cache_dir=<some other dir>
+ #
+ # setup/create lvm disk
+ cloud_lvm_disk=/var/mkc/develcloud-lvm.raw
+ if ! [ -f $cloud_lvm_disk ] ; then
+    qemu-img create -f raw $cloud_lvm_disk 120G
+ fi
+ #
+ if ! losetup -l|grep $cloud_lvm_disk; then
+    export loused=`losetup -f`
+    losetup $loused $cloud_lvm_disk
+ else
+    loused=`losetup |grep -v "NAME"|grep $cloud_lvm_disk|awk '{print $1}'`
+ fi
+ #
+ export cloudpv=${loused}
+ export cloudsource=develcloud8
+ export cloud=soc8
+ export net_fixed=192.168.150
+ export net_public=192.168.151
+ export net_admin=192.168.152
+ export vcpus=2
+ #
+ exec /var/lib/ardana/automation/scripts/mkcloud "$@"
+
+Check the file /etc/lvm/lvm.conf to make sure filters are not preventing
+the creation of the pv.
+
+change the filter line from
+
+ filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|", "r|/dev/fd.*|", "r|/dev/cdrom|", "a/.*/" ]
+
+to
+
+ filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|", "r|/dev/fd.*|", "r|/dev/cdrom|", "r|/dev/mapper/cloud-|", "r|/dev/cloud/|", "r|/dev/disk/by-id/|", "a/.*/" ]
+
+Then you can deploy by calling the script *using sudo* with the step you want. For example:
+ chmod 777 ./mkcloud-deploy.sh
+ sudo ./mkcloud-deploy.sh plain
+
+=== More hands on? here is a step by step:
+
+ git clone https://github.com/SUSE-Cloud/automation.git
+
+ fallocate -l 120G mkcloud.disk
+
+ sudo losetup -f mkcloud.disk
+
+ sudo service SuSEfirewall2 stop
+
+ sudo systemctl disable SuSEfirewall2
+
+Find out the loop device being assgined:
+
+ ardana@crowbar:~> sudo losetup -l
+ NAME       SIZELIMIT OFFSET AUTOCLEAR RO BACK-FILE                    DIO
+ /dev/loop0         0      0         0  0 /var/lib/ardana/mkcloud.disk   0
+
+ export cloudpv=/dev/loop0
+
+ sudo -E ./automation/scripts/mkcloud setuphost
+
+if you an error which says:
+
+ Device /dev/loop0 not found (or ignored by filtering)
+
+Check the file /etc/lvm/lvm.conf to make sure filters are not preventing
+the creation of the pv.
+
+change the filter line from
+
+ filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|", "r|/dev/fd.*|", "r|/dev/cdrom|", "a/.*/" ]
+
+to
+
+ filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|", "r|/dev/fd.*|", "r|/dev/cdrom|", "r|/dev/mapper/cloud-|", "r|/dev/cloud/|", "r|/dev/disk/by-id/|", "a/.*/" ]
+
+run mckloud
+
+ ./automation/script/mkcloud plain
