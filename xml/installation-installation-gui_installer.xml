@@ -9,7 +9,6 @@
  <title>Installing with the &install_ui;</title>
  <para>
  </para>
-
  <para>
   &productname; comes with a GUI-based installation wizard for first-time cloud
   installations. It will guide you through the configuration process and deploy
@@ -19,6 +18,13 @@
   your needs using &install_ui; widgets. You can also directly edit your model
   configuration files.
  </para>
+ <note>
+  <para>
+   The &install_ui; is only for initial deployments. It will not function
+   properly after your cloud has been deployed successfully, whether it was
+   from the CLI or with the &install_ui;.
+  </para>
+ </note>
  <para>
   When you are satisfied with your configuration and the &install_ui; has
   validated your configuration successfully, you can then deploy the cloud into
@@ -365,7 +371,7 @@ sudo vi /etc/hosts
    Deploying the cloud to your servers will reconfigure networking and firewall
    rules on your cloud servers. To avoid problems with these networking changes
    when using the &install_ui;, we recommend you run a browser directly on your
-   &lcm; node and point it to <uri>http://localhost:3000</uri>.
+   &lcm; node and point it to <uri>http://localhost:2209</uri>.
   </para>
   <para>
    If you cannot run a browser on the &lcm; node to perform the install, you
@@ -387,7 +393,7 @@ sudo vi /etc/hosts
      Open a new terminal and enter the following command:
     </para>
 <screen>
-ssh -N -L 8080:localhost:3000 ardana@<replaceable>MANAGEMENT IP address of &lcm;</replaceable>
+ssh -N -L 8080:localhost:2209 ardana@<replaceable>MANAGEMENT IP address of &lcm;</replaceable>
 </screen>
     <para>
      The user name and password should be what was set in
@@ -464,6 +470,30 @@ ssh -N -L 8080:localhost:3000 ardana@<replaceable>MANAGEMENT IP address of &lcm;
    the closest match to your requirements reduces the effort required to deploy
    your cloud.
   </para>
+  <warning>
+   <para>
+    If you select any ESX model, extra manual steps are required to avoid
+    configuration failures. While installing an ESX model with the
+    &install_ui;, you will be asked for interfaces related to ESX and
+    OVSvApp. Those interfaces must be defined before being entered in the
+    &install_ui;.  Instructions are available at <xref
+    linkend="esxi_overview"/>.
+   </para>
+  </warning>
+  <note>
+   <para>
+    <emphasis role="bold">Installing a Stand-alone Deployer</emphasis>
+   </para>
+   <para>
+    If you are using the &install_ui; to install a stand-alone deployer, select
+    that model, which was created previously in <xref
+    linkend="preparing_standalone"/>.
+   </para>
+   <para>
+    Continue with the remaining &install_ui; steps to finish installing the
+    stand-alone deployer.
+   </para>
+  </note>
   <informalfigure>
    <mediaobject>
     <imageobject role="fo">

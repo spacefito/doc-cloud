@@ -81,6 +81,12 @@
  <section xml:id="idg-installation-installation-configure_3par-xml-9">
   <title>Notes</title>
   <para>
+   The <literal>cinder_admin</literal> role must be added in order to configure
+   3Par ICSI as a volume type in &o_dash;.
+  </para>
+  <screen>&prompt.ardana;source ~/service.osrc
+&prompt.ardana;openstack role add --user admin --project admin cinder_admin</screen>
+  <para>
    <emphasis role="bold">Encrypted 3Par Volume</emphasis>: Attaching an
    encrypted 3Par volume is possible after installation by setting
    <literal>volume_use_multipath = true</literal> under the libvirt stanza in
@@ -94,12 +100,9 @@
    <literal>cinder.conf.j2</literal> file using a comma-delimited list.
    Also create multiple volume types so you can specify a backend to utilize
    when creating volumes. Instructions are included below.
-   <!-- the following documentation is not accurate; it doesn't show up in a
-   quick search 2018-02-27; csymons -->
-   <!-- In addition to our documentation, you can also read
-   the OpenStack documentation at
-   <link xlink:href="http://docs.openstack.org/admin-guide-cloud/blockstorage_multi_backend.html">Configure
-   multiple storage backends</link> as well. -->
+   You can also read the OpenStack documentation about <link
+   xlink:href="https://wiki.openstack.org/wiki/Cinder-multi-backend">Cinder
+   multiple storage backends</link>.
   </para>
   <para>
    <emphasis role="bold">Concerning iSCSI and Fiber Channel:</emphasis> You
@@ -108,46 +111,16 @@
    compute server.
   </para>
   <para>
-   <emphasis role="bold">3PAR driver has updated name:</emphasis> In the
-   OpenStack Mitaka release, the 3PAR driver used for &productname; integration
-   had its name updated from <literal>HP3PARFCDriver</literal> and
+   <emphasis role="bold">3PAR driver correct name:</emphasis> In a previous
+   release, the 3PAR driver used for &productname; integration had its name
+   updated from <literal>HP3PARFCDriver</literal> and
    <literal>HP3PARISCSIDriver</literal> to <literal>HPE3PARFCDriver</literal>
-   and <literal>HPE3PARISCSIDriver</literal>. To prevent issues when upgrading
-   from previous &kw-hos; releases, we left the names as-is in the release and
-   provided a mapping so that the integration would continue to work. This will
-   produce a warning in the <literal>cinder-volume.log</literal> file advising
-   you of the deprecated name. The warning will look similar to this:
-   <quote>Option "hp3par_api_url" from group
-   "&lt;<replaceable>YOUR_SECTION</replaceable>>" is
-   deprecated. Use option "hpe3par_api_url" from group
-   "&lt;<replaceable>YOUR_SECTION</replaceable>>"'</quote>.
+   and <literal>HPE3PARISCSIDriver</literal> respectively
+   (<literal>HP</literal> changed to <literal>HPE</literal>). You may get a
+   warning or an error if the deprecated filenames are used. The correct values
+   are those in
+   <filename>~/openstack/my_cloud/config/cinder/cinder.conf.j2</filename>.
   </para>
-  <para>
-   These are just warnings and can be ignored.
-  </para>
-  <!-- FIXME: the following was commented in the DITA original. -->
-  <!--
-  <para>If you would like to remove these warnings, use the following steps:</para>
-  <procedure>
-     <step>Log in to the &lcm;.</step>
-     <step>Update the Cinder configuration file at the following
-       location:<screen>~/openstack/ardana/ansible/roles/_CND-CMN/templates/cinder.conf.j2</screen></step>
-     <step>Change each occurrence of <literal>hplefthand_</literal> to
-         <literal>hpelefthand_</literal> and each occurrence of <literal>hp3par_</literal> to
-         <literal>hpe3par_</literal> in the <literal>cinder.conf.j2</literal> file and save
-       it.</step>
-     <step>Commit your changes to
-       git:<screen>cd ~/openstack/ardana/ansible
-git add -A
-git commit -m "My config or other commit message"</screen></step>
-     <step>Update your deployment
-       directory:<screen>cd ~/openstack/ardana/ansible
-ansible-playbook -i hosts/localhost ready-deployment.yml</screen></step>
-     <step>Use the following playbook to reconfigure the Cinder service to implement the
-       changes:<screen>cd ~/scratch/ansible/next/ardana/ansible
-ansible-playbook -i hosts/verb_hosts cinder-reconfigure.yml</screen></step>
-   </procedure>
-          -->
  </section>
  <section xml:id="sec.3par-multipath">
   <title>Multipath Support</title>
@@ -302,12 +275,12 @@ default_volume_type = &lt;your new volume type></screen>
 san_ip: &#60;3par-san-ipaddr>
 san_login: &#60;3par-san-username>
 san_password: &#60;3par-san-password>
-hp3par_username: &#60;3par-username>
-hp3par_password: &#60;hp3par_password>
-hp3par_api_url: https://&#60;3par-san-ipaddr>:8080/api/v1
-hp3par_cpg: &#60;3par-cpg-name-1>[,&#60;3par-cpg-name-2>, ...]
+hpe3par_username: &#60;3par-username>
+hpe3par_password: &#60;hpe3par_password>
+hpe3par_api_url: https://&#60;3par-san-ipaddr>:8080/api/v1
+hpe3par_cpg: &#60;3par-cpg-name-1>[,&#60;3par-cpg-name-2>, ...]
 volume_backend_name: &#60;3par-backend-name>
-volume_driver: cinder.volume.drivers.san.hp.hp_3par_fc.HP3PARFCDriver</screen>
+volume_driver = cinder.volume.drivers.hpe.hpe_3par_iscsi.HPE3PARISCSIDriver</screen>
        </step>
      </substeps>
     <important>
@@ -391,14 +364,14 @@ enabled_backends=3par_iSCSI</screen>
 san_ip: &#60;3par-san-ipaddr>
 san_login: &#60;3par-san-username>
 san_password: &#60;3par-san-password>
-hp3par_username: &#60;3par-username>
-hp3par_password: &#60;hp3par_password>
-hp3par_api_url: https://&#60;3par-san-ipaddr>:8080/api/v1
-hp3par_cpg: &#60;3par-cpg-name-1>[,&#60;3par-cpg-name-2>, ...]
+hpe3par_username: &#60;3par-username>
+hpe3par_password: &#60;hpe3par_password>
+hpe3par_api_url: https://&#60;3par-san-ipaddr>:8080/api/v1
+hpe3par_cpg: &#60;3par-cpg-name-1>[,&#60;3par-cpg-name-2>, ...]
 volume_backend_name: &#60;3par-backend-name>
-volume_driver: cinder.volume.drivers.san.hp.hp_3par_iscsi.HP3PARISCSIDriver
-hp3par_iscsi_ips: &#60;3par-ip-address-1>[,&#60;3par-ip-address-2>,&#60;3par-ip-address-3>, ...]
-hp3par_iscsi_chap_enabled=true</screen>
+volume_driver: cinder.volume.drivers.san.hp.hp_3par_iscsi.hpe3parISCSIDriver
+hpe3par_iscsi_ips: &#60;3par-ip-address-1>[,&#60;3par-ip-address-2>,&#60;3par-ip-address-3>, ...]
+hpe3par_iscsi_chap_enabled=true</screen>
       <important>
        <para>
         Do not use <literal>backend_host</literal> variable in

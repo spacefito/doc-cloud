@@ -6,7 +6,7 @@
  xmlns="http://docbook.org/ns/docbook" version="5.1"
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink">
- <title>Installing of &caasp; &o_orch; Templates</title>
+ <title>Installing &caasp; &o_orch; Templates</title>
  <para>
   This chapter describes how to install &caasp; &o_orch; template on
   &productname;.
@@ -40,6 +40,13 @@ CaaSP-3</screen>
      The installed templates are located in
      <filename>/usr/share/caasp-openstack-heat-templates</filename>.
     </para>
+    <para>
+     Alternatively, you can get official &o_orch; templates by cloning the
+     appropriate Git repository:
+    </para>
+<screen>
+git clone https://github.com/SUSE/caasp-openstack-heat-templates
+</screen>
    </step>
   </procedure>
   <procedure>
